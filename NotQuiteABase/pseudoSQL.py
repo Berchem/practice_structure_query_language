@@ -40,14 +40,22 @@ class Table:
         set num_friends = 1
         where user_id = 0;
 
-        :param updates:
-        :param predicate:
+        :param updates: {column: new_value}
+        :param predicate: boolean function, f({key: value})
         :return:
         """
         for row in self.rows:
             if predicate(row):
                 for column, new_value in updates.iteritems():
                     row[column] = new_value
+
+    def delete(self, predicate=lambda row: True):
+        """DELETE
+
+        :param predicate: boolean function, f({key: value}) 
+        :return:
+        """
+        self.rows = [row for row in self.rows if not predicate(row)]
 
 
 # read data
@@ -61,10 +69,16 @@ users = Table(["user_id", "name", "num_friends"])
 for user in data:
     users.insert(user)
 
-# update user_id=0, num_friend -> 1
-users.update({"num_friends": 1}, lambda row: row["name"] == 0)
-
-# update name="Chi", num_friend -> 10
-users.update({"num_friends": 10}, lambda row: row["name"] == "Chi")
+# # update user_id=0, num_friend -> 1
+# users.update({"num_friends": 1}, lambda row: row["user_id"] == 0)
+#
+# # update name="Chi", num_friend -> 10
+# users.update({"num_friends": 10}, lambda row: row["name"] == "Chi")
+#
+# # delete user_id=1
+# users.delete(lambda row: row["user_id"] == 1)
+#
+# # delete all
+# users.delete()
 
 print users
