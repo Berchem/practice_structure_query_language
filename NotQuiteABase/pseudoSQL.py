@@ -52,7 +52,10 @@ class Table:
     def delete(self, predicate=lambda row: True):
         """DELETE
 
-        :param predicate: boolean function, f({key: value}) 
+        delete from users  # default delete all
+        delete from users where id = 1;  # delete specific row
+
+        :param predicate: boolean function, f({key: value})
         :return:
         """
         self.rows = [row for row in self.rows if not predicate(row)]
