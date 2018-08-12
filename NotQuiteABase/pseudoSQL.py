@@ -12,7 +12,7 @@ class Table:
             num_friends int
         );
 
-        :param columns: [column_values]
+        :param columns: [column_values, ]
         """
         self.columns = columns
         self.rows = []
@@ -25,7 +25,7 @@ class Table:
 
         insert into users (user_id, name, num_friends) values (0, "Hero", 0);
 
-        :param row_values: [row_values]
+        :param row_values: [row_values, ]
         :return: void
         """
         if len(row_values) != len(self.columns):
@@ -40,7 +40,7 @@ class Table:
         set num_friends = 1
         where user_id = 0;
 
-        :param updates: {column: new_value}
+        :param updates: {column: new_value, }
         :param predicate: boolean function, f({key: value})
         :return:
         """
@@ -59,6 +59,36 @@ class Table:
         :return:
         """
         self.rows = [row for row in self.rows if not predicate(row)]
+
+    def select(self, keep_columns=None, additional_columns=None):
+        """SELECT
+
+        select * from users
+        select * from users limit 2
+        select name, num_friends from users
+        select user_id, length(name) as name_len from users
+
+        :param keep_columns: ["column", ]
+        :param additional_columns: {new_col: new_val}
+        :return: table
+        """
+        if keep_columns is None:
+            keep_columns = self.columns
+
+        if additional_columns is None:
+            additional_columns = {}
+
+        result_table = Table(keep_columns + additional_columns.keys())
+
+        for row in self.rows:
+            new_row = [row[column] for column in keep_columns]
+
+            for column_name, calculation in additional_columns.iteritems():
+                new_row += [calculation(row)]
+
+            result_table.insert(new_row)
+
+        return result_table
 
 
 # read data
@@ -83,5 +113,16 @@ for user in data:
 #
 # # delete all
 # users.delete()
+#
+# # select * from users
+# s1 = users.select()
+#
+# # select name, num_friends from users
+# s1 = users.select(keep_columns=["name", "num_friends"])
+
+# select length(name) as name_length from users
+s1 = users.select(keep_columns=["user_id"],
+                  additional_columns={"name_len": lambda row: len(row["name"])})
 
 print users
+print s1
