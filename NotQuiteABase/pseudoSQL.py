@@ -1,5 +1,5 @@
 import json
-
+from collections import defaultdict
 
 # create a table in SQL
 class Table:
@@ -113,13 +113,33 @@ class Table:
         where_table.rows = filter(predicate, self.rows)
         return where_table
 
+    def group_by(self, group_by_columns, aggregates, having=None):
+        grouped_rows = defaultdict(list)
+
+        for row in self.rows:
+            key = tuple(row[column] for column in group_by_columns)
+            grouped_rows[key] += [row]
+
+        result_table = Table(group_by_columns + aggregates.keys())
+
+        for key, rows in grouped_rows.iteritems():
+             if having is None or having(rows):
+                new_row = list(key)
+
+                for aggregate_name, aggregate_fn in aggregates.iteritems():
+                    new_row += [aggregate_fn(rows)]
+                    result_table.insert(new_row)
+
+        return result_table
+
+
 
 # read data
 with open("user.json") as f:
     data = json.load(f)
 
 # create table users
-users = Table(["user_id", "name", "num_friends"])
+users = Table(["user_id", "name", "num_friends"], )
 
 # insert data into table
 for user in data:
@@ -153,13 +173,17 @@ for user in data:
 # # select * from users limit 2
 # # l1 = users.limit(3)
 # l1 = users.select().limit(2)
+#
+# # select * from users where num_friends > 1
+# w1 = users.where(lambda row: row["num_friends"] > 1)
+#
+# # select name, num_friends where num_friend < 1
+# w1 = users.select(["name", "num_friends"]).where(lambda row: row["num_friends"] < 1)
+#
+#
+# g1 = users.group_by(group_by_columns=["num_friends"])
 
-# select * from users where num_friends > 1
-w1 = users.where(lambda row: row["num_friends"] > 1)
-
-# select name, num_friends where num_friend < 1
-w1 = users.select(["name", "num_friends"]).where(lambda row: row["num_friends"] < 1)
 
 
 print users
-print w1
+print o1
