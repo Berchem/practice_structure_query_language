@@ -64,7 +64,6 @@ class Table:
         """SELECT
 
         select * from users
-        select * from users limit 2
         select name, num_friends from users
         select user_id, length(name) as name_len from users
 
@@ -89,6 +88,18 @@ class Table:
             result_table.insert(new_row)
 
         return result_table
+
+    def limit(self, lim):
+        """LIMIT
+
+        select * from users limit 2
+
+        :param lim: int
+        :return: table
+        """
+        limit_table = Table(self.columns)
+        limit_table.rows = self.rows[:lim]
+        return  limit_table
 
 
 # read data
@@ -119,10 +130,14 @@ for user in data:
 #
 # # select name, num_friends from users
 # s1 = users.select(keep_columns=["name", "num_friends"])
+#
+# # select length(name) as name_length from users
+# s1 = users.select(keep_columns=["user_id"],
+#                   additional_columns={"name_len": lambda row: len(row["name"])})
 
-# select length(name) as name_length from users
-s1 = users.select(keep_columns=["user_id"],
-                  additional_columns={"name_len": lambda row: len(row["name"])})
+# select * from users limit 2
+# l1 = users.limit(3)
+l1 = users.select().limit(2)
 
 print users
-print s1
+print l1
