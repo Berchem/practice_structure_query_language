@@ -99,7 +99,19 @@ class Table:
         """
         limit_table = Table(self.columns)
         limit_table.rows = self.rows[:lim]
-        return  limit_table
+        return limit_table
+
+    def where(self, predicate=lambda row: True):
+        """WHERE
+
+        select * from users where num_friends > 1
+
+        :param predicate: boolean function, f({key: value})
+        :return: table
+        """
+        where_table = Table(self.columns)
+        where_table.rows = filter(predicate, self.rows)
+        return where_table
 
 
 # read data
@@ -134,10 +146,20 @@ for user in data:
 # # select length(name) as name_length from users
 # s1 = users.select(keep_columns=["user_id"],
 #                   additional_columns={"name_len": lambda row: len(row["name"])})
+#
+# select num_friends > 2 as fs>2 from users
+# s2 = users.select(None, {"fs>2": lambda row: row["num_friends"] > 2})
+#
+# # select * from users limit 2
+# # l1 = users.limit(3)
+# l1 = users.select().limit(2)
 
-# select * from users limit 2
-# l1 = users.limit(3)
-l1 = users.select().limit(2)
+# select * from users where num_friends > 1
+w1 = users.where(lambda row: row["num_friends"] > 1)
+
+# select name, num_friends where num_friend < 1
+w1 = users.select(["name", "num_friends"]).where(lambda row: row["num_friends"] < 1)
+
 
 print users
-print l1
+print w1
