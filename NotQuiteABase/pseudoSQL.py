@@ -132,6 +132,10 @@ class Table:
 
         return result_table
 
+    def order_by(self, order):
+        new_table = self.select()
+        new_table.rows.sort(key=order)
+        return new_table
 
 
 # read data
@@ -183,7 +187,7 @@ for user in data:
 #
 # g1 = users.group_by(group_by_columns=["num_friends"])
 
-
+o1 = users.order_by(lambda row: row["name"])
 
 print users
 print o1
