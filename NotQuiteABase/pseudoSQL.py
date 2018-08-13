@@ -123,7 +123,7 @@ class Table:
         result_table = Table(group_by_columns + aggregates.keys())
 
         for key, rows in grouped_rows.iteritems():
-             if having is None or having(rows):
+            if having is None or having(rows):
                 new_row = list(key)
 
                 for aggregate_name, aggregate_fn in aggregates.iteritems():
@@ -133,22 +133,85 @@ class Table:
         return result_table
 
     def order_by(self, order):
+        """ORDER BY
+
+        select * from users
+        order by name
+
+        :param order: order condition
+        :return: table
+        """
         new_table = self.select()
         new_table.rows.sort(key=order)
         return new_table
+
+    def join(self, other_table, left_join=False):
+        """JOIN
+
+        select * from users
+        join interests
+        on users.user_id =interests.user_id
+
+        :param other_table: the other table with a foreign key (e.g. id)
+        :param left_join: boolean
+        :return: table
+        """
+        # columns in both tables
+        join_on_columns = [col for col in self.columns
+                           if col in other_table.columns]
+
+        # columns in join table
+        additional_columns = [col for col in other_table.columns
+                              if col not in join_on_columns]
+
+        join_table = Table(self.columns + additional_columns)
+
+        for row in self.rows:
+            # check foreign key
+            def is_join(other_row):
+                return all(other_row[col] == row[col] for col in join_on_columns)
+
+            other_rows = other_table.where(is_join).rows
+
+            for other_row in other_rows:
+                join_table.insert([row[col] for col in self.columns] +
+                                  [other_row[col] for col in additional_columns])
+
+            if left_join and not other_rows:
+                join_table.insert([row[col] for col in self.columns] +
+                                  [None for col in additional_columns])
+
+        return join_table
 
 
 # read data
 with open("user.json") as f:
     data = json.load(f)
 
-# create table users
-users = Table(["user_id", "name", "num_friends"], )
+with open("interests.json") as f:
+    note = json.load(f)
 
-# insert data into table
+# create table users
+users = Table(["user_id", "name", "num_friends"])
+
+# create table interests
+interests = Table(["user_id", "interests"])
+
+# insert data into table users
 for user in data:
     users.insert(user)
 
+# insert note into table interests
+for interest in note:
+    interests.insert(interest)
+
+
+print users
+print
+print interests
+print
+j1 = users.join(interests).where(lambda row: row["interests"] == "Python")
+print j1
 # # update user_id=0, num_friend -> 1
 # users.update({"num_friends": 1}, lambda row: row["user_id"] == 0)
 #
@@ -184,10 +247,13 @@ for user in data:
 # # select name, num_friends where num_friend < 1
 # w1 = users.select(["name", "num_friends"]).where(lambda row: row["num_friends"] < 1)
 #
-#
+
 # g1 = users.group_by(group_by_columns=["num_friends"])
 
-o1 = users.order_by(lambda row: row["name"])
+# # select * from users
+# # order by name
+# o1 = users.order_by(lambda row: row["name"])
 
-print users
-print o1
+# print users
+# print o1
+
