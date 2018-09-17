@@ -1,13 +1,7 @@
 import pymysql.cursors
 
 
-def get_connection(
-        db,
-        host="127.0.0.1",
-        port=3306,
-        user="guest",
-        password="password",
-        charset="utf8mb4"):
+def get_connection(host, port, user, password, db, charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor):
 
     connection = pymysql.connect(
         host=host,
@@ -16,7 +10,7 @@ def get_connection(
         password=password,
         db=db,
         charset=charset,
-        cursorclass=pymysql.cursors.DictCursor
+        
     )
 
     return connection
