@@ -10,7 +10,7 @@ def get_connection(host, port, user, password, db, charset="utf8mb4", cursorclas
         password=password,
         db=db,
         charset=charset,
-        
+        cursorclass=cursorclass
     )
 
     return connection
