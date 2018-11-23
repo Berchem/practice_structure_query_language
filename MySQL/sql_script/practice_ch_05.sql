@@ -44,5 +44,91 @@ change column common_name common_name varchar(255);
 
 describe birds_new;
 
-
 update birds_new set endangered=0 where bird_id in (1, 2, 4, 5);
+
+-- i don't know why ERROR 1265 (01000): Data truncated for column 'endangered' at row 1
+-- so drop column then add a new one
+alter table birds_new drop column endangered;
+
+alter table birds_new
+add column endangered
+enum ('Extinct',
+    'Extinct in Wild',
+    'Threathend - Critically Endangered',
+    'Threatened - Endengered',
+    'Threatened - Vulnerable',
+    'Lower Risk - Conservation Dependent',
+    'Lower Risk - Mear Threatened',
+    'Lower Risk - Least Concern') not null
+after family_id;
+
+describe birds_new;
+
+-- create table rookery.conservation_status
+drop table if exists rookery.conservation_status;
+create table rookery.conservation_status (
+    status_id int auto_increment primary key,
+    conservation_category char(10),
+    conservation_state char(25));
+
+-- insert data
+insert into rookery.conservation_status
+    (conservation_category, conservation_state)
+values
+    ('Extinct', 'Extinct'),
+    ('Extinct', 'Extinct in Wild'),
+    ('Threathend', 'Critically Endangered'),
+    ('Threathend', 'Endengered'),
+    ('Threathend', 'Vulnerable'),
+    ('Lower Risk', 'Conservation Dependent'),
+    ('Lower Risk', 'Mear Threatened'),
+    ('Lower Risk', 'Least Concern');
+
+-- query the table
+select * from rookery.conservation_status;
+
+-- notice: database `test` is still in used
+-- alter column name and alter default
+alter table birds_new
+change column endangered conservation_status_id int default 8;
+
+describe birds_new;
+
+-- alter default setting
+alter table birds_new
+alter column conservation_status_id set default 7;
+
+show columns from birds_new like 'conservation_status_id' \G
+
+alter table birds_new
+alter column conservation_status_id drop default;
+
+show columns from birds_new like 'conservation_status_id' \G
+
+select auto_increment
+from information_schema.tables
+where table_name='birds';
+
+-- alter the table's auto_increment
+alter table rookery.birds auto_increment = 10;
+alter table rookery.birds auto_increment = 7;
+
+use rookery;
+
+drop table if exists birds_new;
+create table birds_new like birds;
+-- alter table birds_new auto_increment = 7;
+insert into birds_new
+select * from birds;
+
+drop table if exists birds_details;
+create table birds_details
+select bird_id, description from birds;
+
+alter table birds
+drop column description;
+
+rename table rookery.birds to rookery.birds_old,
+test.birds_new to rookery.birds;
+
+show tables in rookery like 'bird%';
