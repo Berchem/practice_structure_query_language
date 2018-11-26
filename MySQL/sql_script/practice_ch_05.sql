@@ -132,3 +132,23 @@ rename table rookery.birds to rookery.birds_old,
 test.birds_new to rookery.birds;
 
 show tables in rookery like 'bird%';
+
+show index from birdwatchers.humans \G
+
+explain select * from birdwatchers.humans
+where name_last = 'Hollar' \G
+
+-- add index
+-- key name: human_names
+-- columns: name_first, name_last
+alter table birdwatchers.humans
+add index human_names (name_last, name_first);
+
+show create table birdwatchers.humans \G
+
+show index from birdwatchers.humans
+where key_name = 'human_names' \G
+
+alter table conservation_status
+drop primary key,
+change status_id conservation_status_id int primary key auto_increment;
