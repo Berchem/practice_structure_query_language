@@ -133,7 +133,13 @@ test.birds_new to rookery.birds;
 
 show tables in rookery like 'bird%';
 
-show index from birdwatchers.humans \G
+-- alter table test.country order by code;
+select * from test.country order by code limit 5;
+select * from test.country order by countryname limit 5;
+
+-- the following command would throw error 1068
+alter table conservation_status
+change status_id conservation_status_id int auto_increment primary key;
 
 explain select * from birdwatchers.humans
 where name_last = 'Hollar' \G
