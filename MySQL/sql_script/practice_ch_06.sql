@@ -162,4 +162,103 @@ insert into bird_families
 set scientific_name = 'Rallidae',
 order_id = 113;
 
+-- inserting data from another table
+drop table if exists cornell_birds_families_orders;
+create table cornell_birds_families_orders (
+    fid int auto_increment primary key,
+    bird_family varchar(255),
+    examples varchar(255),
+    bird_order varchar(255));
 
+describe cornell_birds_families_orders;
+
+select * from cornell_birds_families_orders limit 1;
+
+alter table bird_families
+add column cornell_bird_order varchar(255);
+
+insert ignore into bird_families
+(scientific_name, brief_description, cornell_bird_order)
+select bird_family, examples, bird_order
+from cornell_birds_families_orders;
+
+select * from bird_families
+order by family_id desc limit 1;
+
+-- page 107
+select distinct bird_orders.order_id,
+cornell_bird_order as "Cornell's order",
+bird_orders.scientific_name as 'My order'
+from bird_families, bird_orders
+where bird_families.order_id is null
+and cornell_bird_order = bird_orders.scientific_name
+limit 5;
+
+-- page 109
+update bird_families, bird_orders
+SET bird_families.order_id = bird_orders.order_id
+where bird_families.order_id is null
+AND cornell_bird_order = bird_orders.scientific_name;
+
+select * from bird_families
+order by family_id desc limit 4;
+
+select * from bird_orders where order_id = 128;
+-- output >>
+-- +----------+-----------------+-------------------+-------------+
+-- | order_id | scientific_name | brief_description | order_image |
+-- +----------+-----------------+-------------------+-------------+
+-- |      128 | Passeriformes   | Passerines        | NULL        |
+-- +----------+-----------------+-------------------+-------------+
+-- Passeriformes 雀形目
+
+-- page 110 check which items were unmatched
+select family_id, scientific_name, brief_description
+from bird_families where order_id is null;
+
+-- update order
+update bird_families
+set order_id = 112
+where cornell_bird_order = 'Accipitriformes';
+
+-- page 111
+alter table bird_families
+drop column cornell_bird_order;
+
+-- drop table cornell_birds_families_orders;
+
+-- page 112 replacing data
+replace into bird_families
+(scientific_name, brief_description, order_id)
+values
+('Viduidae', 'Indigobirds & Whydahs', 128),
+('Estrildidae', 'Waxbills, Weaver Finches, & Allies', 128),
+('Ploceidae', 'Weavers, Malimbe, & Bishops', 128);
+
+select * from bird_families
+where scientific_name = 'Viduidae' \G
+
+-- page 113
+-- statements that change data (insert, update, delete)
+-- take the priority over read statements (select)
+-- write > read
+
+-- page 114
+-- [lowering the priority of an insert]
+-- insert low_priority into bird_sightings ...
+
+-- page 115
+-- [delaying an insert]
+-- insert delayed into bird_sightings ...
+
+-- [raising an priority of an insert]
+-- insert high_priority into bird_sightings ...
+
+-- page 116
+-- INSERT statements by default are usually
+-- given higher priority over read-only SQL statements
+-- so there would seem to be no need for this option
+
+-- create table test121 (id int auto_increment primary key, name varchar(10));
+-- insert low_priority into test121 (name) values ('Hero');
+-- insert into test121 (name) values ('Clive');
