@@ -49,3 +49,5 @@ where body_shape = 'Woodland Fowl';
 replace into birds_body_shapes
 (body_id, body_shape)
 values ('WLF', 'Upland Ground Birds');
+
+-- if you just want to modify a specify column, use update statement
