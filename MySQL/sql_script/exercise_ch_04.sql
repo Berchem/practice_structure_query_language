@@ -37,3 +37,6 @@ create table birds_bill_shapes (
 
 show create table birds_body_shapes \G
 show create table birds_bill_shapes \G
+
+-- create
+create table tablename (a int);
