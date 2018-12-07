@@ -15,7 +15,9 @@ create table birds (
     common_name varchar(255),
     family_id int,
     description text);
+    
 describe birds;
+
 insert into birds
     (scientific_name, common_name)
 values
