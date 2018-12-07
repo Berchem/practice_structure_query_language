@@ -1,7 +1,8 @@
 use rookery;
--- alter table bird_families
--- add column order_id int;
--- describe bird_families;
+alter table bird_families
+add column order_id int;
+
+describe bird_families;
 
 -- copy table with schema
 drop table if exists test.birds_new;
