@@ -34,4 +34,25 @@ where family_id in (103, 160, 162, 164)
 order by common_name
 limit 3;
 
+select common_name, scientific_name, family_id
+from birds
+where family_id in (103, 160, 162, 164)
+and common_name != ''
+order by common_name
+limit 3;
+
+select common_name, scientific_name, family_id
+from birds
+where family_id in (103, 160, 162, 164) and common_name != ''
+order by common_name
+limit 3, 2;
+
+-- page 125
+select common_name as 'Bird',
+bird_families.scientific_name as 'Family'
+from birds, bird_families
+where bird_families.family_id = birds.family_id
+and order_id = 102
+and common_name != ''
+order by common_name limit 10;
 
