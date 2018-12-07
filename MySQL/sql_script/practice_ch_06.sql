@@ -237,28 +237,3 @@ values
 
 select * from bird_families
 where scientific_name = 'Viduidae' \G
-
--- page 113
--- statements that change data (insert, update, delete)
--- take the priority over read statements (select)
--- write > read
-
--- page 114
--- [lowering the priority of an insert]
--- insert low_priority into bird_sightings ...
-
--- page 115
--- [delaying an insert]
--- insert delayed into bird_sightings ...
-
--- [raising an priority of an insert]
--- insert high_priority into bird_sightings ...
-
--- page 116
--- INSERT statements by default are usually
--- given higher priority over read-only SQL statements
--- so there would seem to be no need for this option
-
--- create table test121 (id int auto_increment primary key, name varchar(10));
--- insert low_priority into test121 (name) values ('Hero');
--- insert into test121 (name) values ('Clive');
