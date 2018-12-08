@@ -56,3 +56,24 @@ and order_id = 102
 and common_name != ''
 order by common_name limit 10;
 
+-- page 126
+select common_name as 'Bird',
+families.scientific_name as 'Family'
+from birds, bird_families as families
+where families.family_id = birds.family_id
+and order_id = 102
+and common_name != ''
+order by common_name limit 10;
+
+-- page 127
+select common_name as 'Bird',
+families.scientific_name as 'Family',
+orders.scientific_name as 'Order'
+from birds,
+bird_families as families,
+bird_orders as orders
+where birds.family_id = families.family_id
+and families.order_id = orders.order_id
+and families.order_id = 102
+and common_name != ''
+order by common_name limit 10, 5;
