@@ -77,3 +77,17 @@ and families.order_id = orders.order_id
 and families.order_id = 102
 and common_name != ''
 order by common_name limit 10, 5;
+
+-- page 128 use of like in where statement
+select common_name as 'Bird',
+families.scientific_name as 'Family',
+orders.scientific_name as 'Order'
+from birds,
+bird_families as families,
+bird_orders as orders
+where birds.family_id = families.family_id
+and families.order_id = orders.order_id
+-- and families.order_id = 102
+ and common_name like '%Plover'
+order by orders.scientific_name, families.scientific_name, common_name
+limit 10;
