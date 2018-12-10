@@ -91,3 +91,17 @@ and families.order_id = orders.order_id
  and common_name like '%Plover'
 order by orders.scientific_name, families.scientific_name, common_name
 limit 10;
+
+-- build test.birds_prime using cornell data
+
+-- page 129
+select common_name as 'Birds Great and Small'
+from test.birds_prime
+where common_name regexp 'Great|Least'
+order by common_name limit 10;
+
+select common_name as 'Birds Great and Small'
+from test.birds_prime
+where common_name regexp 'Great|Least'
+and common_name not regexp 'Greater'
+order by common_name limit 10;
