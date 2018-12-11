@@ -105,3 +105,10 @@ from test.birds_prime
 where common_name regexp 'Great|Least'
 and common_name not regexp 'Greater'
 order by common_name limit 10;
+
+-- page 130
+select common_name as 'Hawks' from test.birds_prime
+where common_name regexp 'Hawk'
+and common_name not regexp 'Hawk-Owl'
+order by family_id limit 10;
+
