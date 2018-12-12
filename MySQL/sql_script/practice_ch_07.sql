@@ -112,3 +112,13 @@ where common_name regexp 'Hawk'
 and common_name not regexp 'Hawk-Owl'
 order by family_id limit 10;
 
+-- counting results
+select count(*) from test.birds_prime;
+
+select 
+  families.scientific_name as 'Family',
+  count(*) 'Number of birds'
+from test.birds_prime, bird_families as families
+where test.birds_prime.family_id = families.family_id
+and families.scientific_name = 'Pelecanidae';
+
