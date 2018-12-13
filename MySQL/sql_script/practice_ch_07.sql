@@ -122,3 +122,21 @@ from test.birds_prime, bird_families as families
 where test.birds_prime.family_id = families.family_id
 and families.scientific_name = 'Pelecanidae';
 
+select orders.scientific_name as 'Order',
+families.scientific_name as 'Family',
+count(*) as 'Number of Birds'
+from test.birds_prime, bird_families as damiliesm bird_orders as orders
+where test.birds.family_id = families.family_id
+and families.order_id = orders.order_id
+and orders.scientific_name = 'Plecanidae';
+
+-- add group by statement
+select orders.scientific_name as 'Order',
+families.scientific_name as 'Family',
+count(*) as 'Number of Birds'
+from test.birds_prime, bird_families as damiliesm bird_orders as orders
+where test.birds.family_id = families.family_id
+and families.order_id = orders.order_id
+and orders.scientific_name = 'Plecanidae'
+group by Family;
+
