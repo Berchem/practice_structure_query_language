@@ -112,15 +112,27 @@ where common_name regexp 'Hawk'
 and common_name not regexp 'Hawk-Owl'
 order by family_id limit 10;
 
+-- page 131
+show create database rookery;
+
+show full columns from birds like 'common%' \G
+
+-- page 132
+select common_name as 'Hawks' from test.birds_prime
+where common_name regexp '[[:space:]]Hawk|[[.hyphen.]]Hawk'
+and common_name not regexp 'Hawk-Owl'
+order by family_id;
+
 -- counting results
 select count(*) from test.birds_prime;
 
-select 
+-- page 133
+select
   families.scientific_name as 'Family',
   count(*) 'Number of birds'
 from test.birds_prime, bird_families as families
 where test.birds_prime.family_id = families.family_id
-and families.scientific_name = 'Pelecanidae';
+and families.scientific_name regexp 'Pelecanidae';
 
 select orders.scientific_name as 'Order',
 families.scientific_name as 'Family',
@@ -128,15 +140,14 @@ count(*) as 'Number of Birds'
 from test.birds_prime, bird_families as damiliesm bird_orders as orders
 where test.birds.family_id = families.family_id
 and families.order_id = orders.order_id
-and orders.scientific_name = 'Plecanidae';
+and orders.scientific_name regexp 'Plecanidae';
 
--- add group by statement
+-- page 134 add group by statement
 select orders.scientific_name as 'Order',
 families.scientific_name as 'Family',
 count(*) as 'Number of Birds'
-from test.birds_prime, bird_families as damiliesm bird_orders as orders
-where test.birds.family_id = families.family_id
+from test.birds_prime, bird_families as families, bird_orders as orders
+where test.birds_prime.family_id = families.family_id
 and families.order_id = orders.order_id
 and orders.scientific_name = 'Plecanidae'
 group by Family;
-
