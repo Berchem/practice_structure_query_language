@@ -24,3 +24,22 @@ set formal_title = 'Ms.'
 where human_id in (24, 32);
 
 show full columns from humans like 'formal%' \G
+
+-- the handbook show that Type: enum
+-- so, modify it
+--
+-- +----------+--------------+
+-- | human_id | formal_title |
+-- +----------+--------------+
+-- |        1 | Mr           |
+-- |        2 | Mr           |
+-- |        3 | Ms           |
+-- |        4 | Ms           |
+-- +----------+--------------+
+-- Field: formal_title
+--  Type: varchar(25)
+--
+-- alter table humans modify formal_title enum ('Ms.', 'Miss', 'Mr.', 'Mrs.');
+-- ERROR 1265 (01000): Data truncated for column 'formal_title' at row 1
+--
+-- because 'Mr', 'Ms' were not in ('Ms.', 'Miss', 'Mr.', 'Mrs.')
