@@ -14,3 +14,13 @@ where name_first = 'Rusty' and name_last = 'Osborne';
 
 -- page 139
 update humans set name_last = 'Johnson' where human_id = 3;
+
+select human_id, name_first, name_last
+from humans where human_id = 3;
+
+-- data lose
+update humans
+set formal_title = 'Ms.'
+where human_id in (24, 32);
+
+show full columns from humans like 'formal%' \G
