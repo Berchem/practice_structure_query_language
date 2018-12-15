@@ -43,3 +43,17 @@ show full columns from humans like 'formal%' \G
 -- ERROR 1265 (01000): Data truncated for column 'formal_title' at row 1
 --
 -- because 'Mr', 'Ms' were not in ('Ms.', 'Miss', 'Mr.', 'Mrs.')
+update humans set formal_title = 'Mr.' where formal_title = 'Mr';
+update humans set formal_title = 'Ms.' where formal_title = 'Ms';
+alter table humans modify formal_title enum('Ms.', 'Miss', 'Mr.', 'Mrs.');
+
+-- page 140
+update humans
+set formal_title = 'Ms.'
+where formal_title in ('Miss', 'Mrs.');
+
+alter table humans
+change column formal_title formal_title enum ('Ms.', 'Mr.');
+
+show warnings \G
+
