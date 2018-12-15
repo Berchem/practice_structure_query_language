@@ -57,3 +57,10 @@ change column formal_title formal_title enum ('Ms.', 'Mr.');
 
 show warnings \G
 
+-- page 141
+alter table humans modify formal_title enum ('Ms.', 'Mr.', 'Ms', 'Mr');
+
+update humans set formal_title = substring(formal_title, 1, 2);
+
+alter table humans modify formal_title enum ('Mr', 'Ms');
+
