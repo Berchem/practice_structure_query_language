@@ -77,6 +77,9 @@ insert into prize_winner (human_id)
 select human_id from humans;
 
 -- ordering to make different
+-- If using MySQL replication, it'll have a situation in 
+-- which one slave may update its data differently from the data on the master or the other slaves 
+-- # especially if you use the RAND() function (i.e., the slave will have different random results)
 update prize_winners
 set winner_date = curdate() -- curdate(): return current date
 where winner_date is null
