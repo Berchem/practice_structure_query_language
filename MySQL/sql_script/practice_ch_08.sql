@@ -64,3 +64,21 @@ update humans set formal_title = substring(formal_title, 1, 2);
 
 alter table humans modify formal_title enum ('Mr', 'Ms');
 
+-- page 142 limiting update
+create table prize_winner (
+    winner_id int auto_increment primary key,
+    human_id int,
+    winner_date date,
+    prize_chosen varchar(255),
+    prize_sent date);
+
+-- page 143
+insert into prize_winner (human_id)
+select human_id from humans;
+
+-- ordering to make different
+update prize_winners
+set winner_date = curdate() -- curdate(): return current date
+where winner_date is null
+order by rand()
+limit 2;
