@@ -85,3 +85,20 @@ set winner_date = curdate() -- curdate(): return current date
 where winner_date is null
 order by rand()
 limit 2;
+
+-- page 145 updating multiple table
+update prize_winners, humans
+set winner_date = null,
+prize_chosen = null,
+prize_sent = null
+where country_id = 'uk'
+and prize_winners.human_id = humans.human_id;
+
+-- ERROR 1221 (HY000): Incorrect usage of UPDATE and ORDER BY
+update prize_winners, humans
+set winner_date = curdate(),
+where prize_chosen = null
+where country_id = 'uk'
+and prize_winners.human_id = humans.human_id
+order by rand()
+limit 2;
