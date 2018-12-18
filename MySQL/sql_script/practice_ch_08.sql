@@ -102,3 +102,18 @@ where country_id = 'uk'
 and prize_winners.human_id = humans.human_id
 order by rand()
 limit 2;
+
+-- page 146 use subquery
+update prize_winners
+set winner_date = curdate()
+where winner_date is null
+and human_id in
+(select human_id from humans
+where country_id = 'us' order by rand())
+limit 2;
+ 
+ -- page 147
+ alter table humans
+ add column better_birder_site tinyint default 0;
+ 
+ 
