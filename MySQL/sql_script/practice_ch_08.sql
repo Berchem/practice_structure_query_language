@@ -112,8 +112,14 @@ and human_id in
 where country_id = 'us' order by rand())
 limit 2;
  
- -- page 147
- alter table humans
- add column better_birder_site tinyint default 0;
+-- page 147
+alter table humans
+add column better_birder_site tinyint default 0;
  
- 
+insert into humans
+(formal_title, name_first, name_last, email_address, better_birders_site)
+values ('Mr', 'Barry', 'Pilson', 'barry@gomail.com', 1),
+('Ms', 'Lexi', 'Hollar', 'alexandra@mysqlresources.com', 1),
+('Mr', 'Ricky', 'Adams', 'ricky@gomail.com', 1)
+on duplicate key
+update better_birders_site = 2;
