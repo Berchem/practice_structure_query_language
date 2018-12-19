@@ -114,7 +114,8 @@ limit 2;
  
 -- page 147
 alter table humans
-add column better_birder_site tinyint default 0;
+add column better_birder_site tinyint default 0,
+modify column email_address varchar(255) unique;
  
 insert into humans
 (formal_title, name_first, name_last, email_address, better_birders_site)
